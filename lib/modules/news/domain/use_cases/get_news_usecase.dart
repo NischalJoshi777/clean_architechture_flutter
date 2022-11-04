@@ -10,6 +10,14 @@ class GetNewsUseCase extends UseCase<NewsEntity, NoParams> {
 
   @override
   Future<NewsEntity> call(NoParams params) async {
-    return await repository.getNews();
+    final news = await repository.getNews();
+    final articleList = news.articles;
+    articleList.sort((a, b) =>
+        DateTime.parse(a.publishedAt).compareTo(DateTime.parse(b.publishedAt)));
+    return NewsEntity(
+      status: news.status,
+      totalResults: news.totalResults,
+      articles: articleList,
+    );
   }
 }
